@@ -48,6 +48,8 @@ export default function StudentDashboard() {
             ) : (
                 <p>No student profile found.</p>
             )}
+
+            <button onClick={() => supabase.auth.signOut()}>Sign Out</button>
         </div>
     );
 }
