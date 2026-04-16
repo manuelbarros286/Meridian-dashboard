@@ -6,8 +6,12 @@ export default function AdminDashboard() {
 
     useEffect(() => {
         const fetchAllData = async () => {
-            const { data } = await supabase.from('students').select('*');
-            setAllStudents(data || []);
+            const { data, error } = await supabase.from('students').select('*, tutor:profiles!tutor_id(full_name)');
+            if (error) {
+                console.error("Fetch error:", error.message);
+            }  else{
+                setAllStudents(data || []);
+            }
         }
         fetchAllData();
     }, []);
@@ -29,8 +33,8 @@ export default function AdminDashboard() {
                 <td>{student.email}</td>
                 <td>{student.status}</td>
                 <td>
-                    {student.tutor_id ? (
-                        <span style={{ fontSize: "0.8rem", color: "#666" }}>{student.tutor_id}</span>
+                    {student.tutor ? (
+                        <span>{student.tutor.full_name}</span>
                     ) : (
                         <strong style={{ color: "red" }}>UNASSIGNED</strong>
                     )}
@@ -45,7 +49,7 @@ export default function AdminDashboard() {
 
     return (
         <div className="admin-container">
-            <h1>Platform Master Control (Admin)</h1>
+            <h1>Meridian Master Control (Admin)</h1>
             <table border="1" style={{ width: "100%", borderCollapse: "collapse" }}>
                 <thead>
                 <tr style={{ backgroundColor: "#eee" }}>
